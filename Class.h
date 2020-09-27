@@ -2,20 +2,22 @@
 #define Class.h
 
 #include <vector>
-#include <string>
 
 using namespace std;
 
-class Map{
+class Block{
 public:
-    vector<vector<int>> Mapa;
+	vector<vector<int>> Matriz;
+	int type;
+	int state;
 public:
-    // 
-    Map();
-	bool Check_touch_next(vector<vector<int>> Matriz, int new_pos_x, int new_pos_y);
-	void assing(Player* player);
-	void Check_score(Player* player);
-	bool Check_lose(Player* player);
+	Block(int state, int type, bool check = false);
+	void control_rotate();
+	int get_type();
+	int* get_adress_state();
+private:
+	void rotate();
+	void rotate_negative();
 };
 
 class Player{
@@ -27,25 +29,29 @@ private:
 public:
 	Block* block_player;
     Player();
+private:
 	void random();
 	void new_pointer();
+public:
 	void Rotation();
-	void Movement(char move);
+	void Restart();
 	int Get_x();
 	int Get_y();
 	void Increment_x();
+	void Increment_y();
 	void Add_score(int attempt=1);
 };
 
-class Block{
+class Map{
 public:
-	vector<vector<int>> Matriz;
+    vector<vector<int>> Mapa;
 public:
-	Block(bool check = false);
-	void control_rotate(int type=0, int* state=NULL);
-private:
-	void rotate();
-	void rotate_negative();
+    // 
+    Map();
+	bool Check_touch_next(vector<vector<int>> Matriz, int new_pos_x, int new_pos_y);
+	void assing(Player* player);
+	void Check_score(Player* player);
+	bool Check_lose(Player* player);
 };
 
 class Block_l : public Block{
@@ -61,8 +67,6 @@ private:
 	int state;
 public:
     Block_cloud(int type);
-	int get_type();
-	int* get_adress_state();
 };
 
 class Block_square : public Block{

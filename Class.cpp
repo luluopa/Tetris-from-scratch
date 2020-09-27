@@ -1,6 +1,5 @@
 #include <vector>
 #include <iostream>
-#include <string>
 #include "Class.h"
 #include <random>
 
@@ -13,13 +12,9 @@ const int tam_x = 5;
 const short int map_y = 10;
 const short int map_x = 10;
 
-const short int Up = 38;
-const short int Down = 40;
-const short int Right = 39;
-const short int Left = 37;
-
 Map::Map()
 {
+	Mapa.assign(map_y, vector<int>(map_x, 0));
 	for (int i = 0; i < map_y; i++)
 	{
 		for (int j = 0; j < map_x; j++)
@@ -106,7 +101,7 @@ void Map::Check_score(Player* player){
 	bool Map::Check_lose(Player* player){
 		int x = player->Get_x();
 		int y = player->Get_y();
-		if(x == 3 && y == 3 && Check_touch_next(player->block_player->Matriz,x,y)){
+		if(x == 3 && y == 3 && !Check_touch_next(player->block_player->Matriz,x,y)){
 			return true;
 		}  
 		return false;
@@ -116,8 +111,8 @@ void Map::Check_score(Player* player){
 
 Player::Player()
 {
-	this->type = -1;
-	block_player = NULL;
+	random();
+	new_pointer();
 	x = 3;
 	y = 3;
 }
@@ -161,7 +156,7 @@ void Player::Rotation()
 {
 	if (type == 2 || type == 3)
 	{
-		block_player->control_rotate(block_player->get_type(), block_player->get_adress_state());
+		block_player->control_rotate();
 	}
 	else
 	{
@@ -169,20 +164,11 @@ void Player::Rotation()
 	}
 }
 
-void Player::Movement(char move)
-{
-	if (int(move) == Right)
-	{
-		x += 1;
-	}
-	else if (int(move) == Left)
-	{
-		x -= 1;
-	}
-	else if (move == 'z')
-	{
-		Rotation();
-	}
+void Player::Restart(){
+	random();
+	new_pointer();
+	x = 3;
+	y = 3;
 }
 
 int Player::Get_x()
@@ -200,32 +186,46 @@ void Player::Increment_x()
 	x++;
 }
 
-void Player::Add_score(int attempt=1){
+void Player::Increment_y(){
+	y++;
+}
+
+void Player::Add_score(int attempt){
 	points+=attempt;
 }
 
 //Block
 
-Block::Block(bool check = false)
+Block::Block(int state, int type, bool check)
 {
+	this->state = state;
+	this->type = type;
 	if (!check)
 	{
 		Matriz.assign(tam_y, std::vector<int>(tam_x, 0));
 	}
 }
-void Block::control_rotate(int type = 0, int *state = NULL)
+
+int Block::get_type(){
+	return type;
+}
+int* Block::get_adress_state(){
+	return &state;
+}
+
+void Block::control_rotate()
 {
 	if (type == 2 || type == 3)
 	{
-		if ((*state) == 0)
+		if (state == 0)
 		{
 			rotate();
-			(*state)++;
+			state++;
 		}
 		else
 		{
 			rotate_negative();
-			(*state)--;
+			state--;
 		}
 	}
 	else
@@ -278,9 +278,8 @@ void Block::rotate_negative()
 
 //Block_l
 
-Block_l::Block_l(int type) : Block::Block()
+Block_l::Block_l(int type) : Block::Block(type, -1)
 {
-	this->type = type;
 	for (int i = 0; i < tam_y; i++)
 	{
 		for (int j = 0; j < tam_x; j++)
@@ -303,10 +302,8 @@ Block_l::Block_l(int type) : Block::Block()
 
 //Block_cloud
 
-Block_cloud::Block_cloud(int type) : Block::Block()
+Block_cloud::Block_cloud(int type) : Block::Block(type, 0)
 {
-	this->type = type;
-	state = 0;
 	for (int i = 0; i < tam_y; i++)
 	{
 		for (int j = 0; j < tam_x; j++)
@@ -327,22 +324,10 @@ Block_cloud::Block_cloud(int type) : Block::Block()
 	}
 }
 
-//Block_cloud
-
-int Block_cloud::get_type()
-{
-	return type;
-}
-int *Block_cloud::get_adress_state()
-{
-	return &state;
-}
-
 //Block_square
 
-Block_square::Block_square(int type) : Block::Block()
+Block_square::Block_square(int type) : Block::Block(type, -1)
 {
-	this->type = type;
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 2; j++)
@@ -354,9 +339,8 @@ Block_square::Block_square(int type) : Block::Block()
 
 //Block_triangle
 
-Block_triangle::Block_triangle(int type) : Block::Block()
+Block_triangle::Block_triangle(int type) : Block::Block(type, -1)
 {
-	this->type = type;
 	for (int i = 0; i < tam_y; i++)
 	{
 		for (int j = 0; j < tam_x; j++)
@@ -377,9 +361,8 @@ Block_triangle::Block_triangle(int type) : Block::Block()
 
 //Block_stab
 
-Block_stab::Block_stab(int type) : Block::Block()
+Block_stab::Block_stab(int type) : Block::Block(type,-1)
 {
-	this->type = type;
 	for (int i = 0; i < tam_y; i++)
 	{
 		for (int j = 0; j < tam_x; j++)
