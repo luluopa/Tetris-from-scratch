@@ -10,7 +10,7 @@ const short int Right = 39;
 const short int Left = 37;
 
 void update_screen(){
-	system("cls");
+	system("clear");
 }
 
 void Print_screen(Map* mapa, Player* player){
@@ -35,6 +35,10 @@ void Print_screen(Map* mapa, Player* player){
 		cout << endl;
 	}
 }
+
+//implementação do get char para pegar uma entrada teclado e fazer o movimento 
+//implementação do check lines e check lose
+//implementação do score
 
 void Rotation(Player* player){
     player->Rotation();
@@ -62,7 +66,6 @@ int main(){
 	while(true){
 		update_screen();
 		Print_screen(&mapa_do_jogo, &player);
-		Rotation(&player);
 		Movement(&mapa_do_jogo, &player);
 		Check_lines(&mapa_do_jogo, &player);
 	}
