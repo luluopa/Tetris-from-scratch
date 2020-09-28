@@ -10,14 +10,23 @@ const short int Right = 39;
 const short int Left = 37;
 
 void update_screen(){
-	system("clear");
+	system("cls");
 }
 
-void Print_screen(Map* mapa){
-	for(int i=0;i<mapa->Mapa.size(); i++){
-		for(int j=0;j<mapa->Mapa[i].size();i++){
+void Print_screen(Map* mapa, Player* player){
+	for(int i=0;i<24; i++){
+		for(int j=0;j<20;j++){
 			if(mapa->Mapa[i][j] == 1){
 				cout << "#";
+			}
+			else if((i >= player->Get_y() && i <= player->Get_y()+4) &&
+			(j >= player->Get_x() && j <= player->Get_x()+4)){
+				if(player->block_player->Matriz[i-player->Get_y()][j-player->Get_x()] == 1){
+					cout << "#";
+				}
+				else{
+					cout << " ";
+				}
 			}
 			else{
 				cout << " ";
@@ -27,9 +36,8 @@ void Print_screen(Map* mapa){
 	}
 }
 
-void Rotation(Map* mapa, Player* player){
+void Rotation(Player* player){
     player->Rotation();
-	mapa->assing(player);
 }
  
 void Movement(Map* mapa, Player* player){
@@ -52,10 +60,11 @@ int main(){
 	Player player;
 	//loop do jogo
 	while(true){
-		Print_screen(&mapa_do_jogo);
+		update_screen();
+		Print_screen(&mapa_do_jogo, &player);
+		Rotation(&player);
 		Movement(&mapa_do_jogo, &player);
 		Check_lines(&mapa_do_jogo, &player);
-		update_screen();
 	}
 
 	return 0;

@@ -1,7 +1,7 @@
 #include <vector>
-#include <iostream>
 #include "Class.h"
-#include <random>
+#include <cstdlib>
+#include <iostream>
 
 using namespace std;
 
@@ -9,8 +9,8 @@ const int tam_y = 5;
 const int tam_x = 5;
 
 //tamanho do mapa
-const short int map_y = 10;
-const short int map_x = 10;
+const short int map_y = 24;
+const short int map_x = 20;
 
 Map::Map()
 {
@@ -30,7 +30,7 @@ Map::Map()
 		}
 	}
 }
-bool Map::Check_touch_next(vector<vector<int>> Matriz, int new_pos_x, int new_pos_y)
+bool Map::Check_touch_next(vector<vector<int> > Matriz, int new_pos_x, int new_pos_y)
 {
 	vector<int> vector_vnx;
 	for (int i = 0; i < tam_y; i++)
@@ -63,7 +63,7 @@ void Map::assing(Player *player)
 		{
 			if (player->block_player->Matriz[i][j] == 1)
 			{
-				vector_vnx.push_back(i + player->Get_y());
+				vector_vnx.push_back(i + player->Get_y()-1);
 				vector_vnx.push_back(j + player->Get_x());
 			}
 		}
@@ -76,7 +76,7 @@ void Map::assing(Player *player)
 
 void Map::Check_score(Player* player){
 		vector<int> vector_ipos;
-		for(int i=0;i<map_y;i++){
+		for(int i=1;i<map_y-1;i++){
 			int counter=0;
 			for(int j=0;j<map_x;j++){
 				if(Mapa[i][j] == 1){
@@ -147,21 +147,14 @@ void Player::new_pointer()
 	{
 		block_player = new Block_triangle(type);
 	}
-	else
+	else if(type == 6)
 	{
 		block_player = new Block_square(type);
 	}
 }
 void Player::Rotation()
 {
-	if (type == 2 || type == 3)
-	{
 		block_player->control_rotate();
-	}
-	else
-	{
-		block_player->control_rotate();
-	}
 }
 
 void Player::Restart(){
@@ -228,7 +221,7 @@ void Block::control_rotate()
 			state--;
 		}
 	}
-	else
+	else if(type != 6)
 	{
 		rotate();
 	}
@@ -278,7 +271,7 @@ void Block::rotate_negative()
 
 //Block_l
 
-Block_l::Block_l(int type) : Block::Block(type, -1)
+Block_l::Block_l(int type) : Block::Block(-1, type)
 {
 	for (int i = 0; i < tam_y; i++)
 	{
@@ -302,7 +295,7 @@ Block_l::Block_l(int type) : Block::Block(type, -1)
 
 //Block_cloud
 
-Block_cloud::Block_cloud(int type) : Block::Block(type, 0)
+Block_cloud::Block_cloud(int type) : Block::Block(0, type)
 {
 	for (int i = 0; i < tam_y; i++)
 	{
@@ -326,7 +319,7 @@ Block_cloud::Block_cloud(int type) : Block::Block(type, 0)
 
 //Block_square
 
-Block_square::Block_square(int type) : Block::Block(type, -1)
+Block_square::Block_square(int type) : Block::Block(-1, type)
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -339,7 +332,7 @@ Block_square::Block_square(int type) : Block::Block(type, -1)
 
 //Block_triangle
 
-Block_triangle::Block_triangle(int type) : Block::Block(type, -1)
+Block_triangle::Block_triangle(int type) : Block::Block(-1, type)
 {
 	for (int i = 0; i < tam_y; i++)
 	{
@@ -361,7 +354,7 @@ Block_triangle::Block_triangle(int type) : Block::Block(type, -1)
 
 //Block_stab
 
-Block_stab::Block_stab(int type) : Block::Block(type,-1)
+Block_stab::Block_stab(int type) : Block::Block(-1, type)
 {
 	for (int i = 0; i < tam_y; i++)
 	{

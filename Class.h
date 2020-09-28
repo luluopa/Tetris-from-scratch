@@ -7,7 +7,7 @@ using namespace std;
 
 class Block{
 public:
-	vector<vector<int>> Matriz;
+	vector<vector<int> > Matriz;
 	int type;
 	int state;
 public:
@@ -44,11 +44,11 @@ public:
 
 class Map{
 public:
-    vector<vector<int>> Mapa;
+    vector<vector<int> > Mapa;
 public:
     // 
     Map();
-	bool Check_touch_next(vector<vector<int>> Matriz, int new_pos_x, int new_pos_y);
+	bool Check_touch_next(vector<vector<int> > Matriz, int new_pos_x, int new_pos_y);
 	void assing(Player* player);
 	void Check_score(Player* player);
 	bool Check_lose(Player* player);
