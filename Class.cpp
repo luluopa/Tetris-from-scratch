@@ -1,7 +1,6 @@
 #include <vector>
 #include "Class.h"
 #include <cstdlib>
-#include <iostream>
 
 using namespace std;
 
@@ -72,6 +71,7 @@ void Map::assing(Player *player)
 	{
 		Mapa[vector_vnx[i]][vector_vnx[i + 1]] = 1;
 	}
+	player->Add_score(2);
 }
 
 void Map::Check_score(Player* player){
@@ -88,12 +88,14 @@ void Map::Check_score(Player* player){
 			}
 		}
 		int aux=-1;
+		int i=vector_ipos.size();
+		while(vector_ipos.size() != 0 && i < vector_ipos[0]){
 		for(int i=0;i<vector_ipos.size();i++){
 			for(int j=0;j<map_x;j++){
-				aux = Mapa[vector_ipos[i]-vector_ipos.size()][j];
-				Mapa[vector_ipos[i]-vector_ipos.size()][j] = 0;
-				Mapa[vector_ipos[i]][j] = 1;
+				Mapa[vector_ipos[i]][j] = Mapa[vector_ipos[i]-vector_ipos.size()][j];
 			}
+			vector_ipos[i] = vector_ipos[i]-vector_ipos.size();
+		}
 		}
 		player->Add_score(vector_ipos.size()*4);
 	}
@@ -101,7 +103,7 @@ void Map::Check_score(Player* player){
 	bool Map::Check_lose(Player* player){
 		int x = player->Get_x();
 		int y = player->Get_y();
-		if(x == 3 && y == 3 && !Check_touch_next(player->block_player->Matriz,x,y)){
+		if(y == 3 && !Check_touch_next(player->block_player->Matriz,x,y+1)){
 			return true;
 		}  
 		return false;
@@ -111,10 +113,11 @@ void Map::Check_score(Player* player){
 
 Player::Player()
 {
+	points = 0;
 	random();
 	new_pointer();
-	x = 3;
-	y = 3;
+	x = 5;
+	y = 2;
 }
 void Player::random()
 {
@@ -174,17 +177,21 @@ int Player::Get_y()
 	return y;
 }
 
-void Player::Increment_x()
+void Player::Increment_x(int attempt)
 {
-	x++;
+	x+=attempt;
 }
 
-void Player::Increment_y(){
-	y++;
+void Player::Increment_y(int attempt){
+	y+=attempt;
 }
 
 void Player::Add_score(int attempt){
 	points+=attempt;
+}
+
+int Player::Get_points(){
+	return points;
 }
 
 //Block

@@ -37,8 +37,9 @@ public:
 	void Restart();
 	int Get_x();
 	int Get_y();
-	void Increment_x();
-	void Increment_y();
+	int Get_points();
+	void Increment_x(int attempt=1);
+	void Increment_y(int attempt=1);
 	void Add_score(int attempt=1);
 };
 
@@ -46,7 +47,6 @@ class Map{
 public:
     vector<vector<int> > Mapa;
 public:
-    // 
     Map();
 	bool Check_touch_next(vector<vector<int> > Matriz, int new_pos_x, int new_pos_y);
 	void assing(Player* player);
